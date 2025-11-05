@@ -1,0 +1,125 @@
+version: "3.9"
+
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+    volumes:
+      - ${APPDATA_PATH}/qbittorrent:/config
+      - ${MEDIA_PATH}/Downloads:/downloads
+    ports:
+      - "8080:8080"
+      - "6881:6881"
+      - "6881:6881/udp"
+    restart: unless-stopped
+    networks:
+      - ${NETWORK_NAME}
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${APPDATA_PATH}/prowlarr:/config
+    ports:
+      - "9696:9696"
+    restart: unless-stopped
+    depends_on:
+      - qbittorrent
+    networks:
+      - ${NETWORK_NAME}
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${APPDATA_PATH}/sonarr:/config
+      - ${MEDIA_PATH}/TV:/tv
+      - ${MEDIA_PATH}/Downloads:/downloads
+    ports:
+      - "8989:8989"
+    restart: unless-stopped
+    depends_on:
+      - qbittorrent
+      - prowlarr
+    networks:
+      - ${NETWORK_NAME}
+
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${APPDATA_PATH}/radarr:/config
+      - ${MEDIA_PATH}/Movies:/movies
+      - ${MEDIA_PATH}/Downloads:/downloads
+    ports:
+      - "7878:7878"
+    restart: unless-stopped
+    depends_on:
+      - qbittorrent
+      - prowlarr
+    networks:
+      - ${NETWORK_NAME}
+
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - ${APPDATA_PATH}/jellyseerr:/app/config
+    ports:
+      - "5055:5055"
+    restart: unless-stopped
+    depends_on:
+      - sonarr
+      - radarr
+    networks:
+      - ${NETWORK_NAME}
+
+  # ────────────────────────────────────────────────
+  # 🧩 OPTIONAL: Bazarr (Subtitle Automation)
+  # ────────────────────────────────────────────────
+  # bazarr:
+  #   image: lscr.io/linuxserver/bazarr:latest
+  #   container_name: bazarr
+  #   environment:
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - TZ=${TZ}
+  #   volumes:
+  #     - ${APPDATA_PATH}/bazarr:/config
+  #     - ${MEDIA_PATH}/Movies:/movies
+  #     - ${MEDIA_PATH}/TV:/tv
+  #   ports:
+  #     - "6767:6767"
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - sonarr
+  #     - radarr
+  #   networks:
+  #     - ${NETWORK_NAME}
+  # ────────────────────────────────────────────────
+
+networks:
+  ${NETWORK_NAME}:
+    name: ${NETWORK_NAME}
