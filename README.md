@@ -34,16 +34,15 @@ A Docker Compose setup for managing and automating your media server needs. This
    PUID=1000            # Your user ID
    PGID=1000           # Your group ID
    TZ=Asia/Kolkata     # Your timezone
-   APPDATA_PATH=/DATA/AppData
-   MEDIA_PATH=/home/darshan/Media
-   NETWORK_NAME=media-network
+   APPDATA_PATH=<config path>
+   MEDIA_PATH=<media path>
    ```
 
 ### Installation
 
 1. Start the stack:
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 2. Access the services:
@@ -52,6 +51,11 @@ A Docker Compose setup for managing and automating your media server needs. This
    - Sonarr: http://localhost:8989
    - Radarr: http://localhost:7878
    - Jellyseerr: http://localhost:5055
+
+3. Stop the stack:
+    ```bash
+    docker compose down
+    ```
 
 ## 🔧 Service Configuration
 
