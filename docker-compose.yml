@@ -106,6 +106,20 @@ services:
     networks:
       - media-network
 
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    hostname: home-server-syncthing
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${APPDATA_PATH}/syncthing:/config
+      - ${MEDIA_PATH}/Downloads/Mobile:/data/mobile_sync
+    network_mode: "host"
+    restart: unless-stopped
+
 networks:
   media-network:
     name: media-network
