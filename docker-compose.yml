@@ -123,7 +123,6 @@ services:
   navidrome:
     image: deluan/navidrome:latest
     container_name: navidrome
-    user: "${PUID}:${PGID}"
     restart: unless-stopped
     ports:
       - "4533:4533"
