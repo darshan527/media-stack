@@ -117,6 +117,7 @@ services:
     volumes:
       - ${APPDATA_PATH}/syncthing:/config
       - ${MEDIA_PATH}/Downloads/Mobile:/data/mobile_sync
+      - ${MEDIA_PATH}/Music:/data/music_sync
     network_mode: "host"
     restart: unless-stopped
 
