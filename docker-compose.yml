@@ -120,6 +120,38 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
+  navidrome:
+    image: deluan/navidrome:latest
+    container_name: navidrome
+    user: "${PUID}:${PGID}"
+    restart: unless-stopped
+    ports:
+      - "4533:4533"
+    environment:
+      # Core
+      ND_MUSICFOLDER: /music
+      ND_DATAFOLDER: /data
+      ND_LOGLEVEL: info
+
+      # Scanning
+      ND_SCANSCHEDULE: 1h
+      ND_SCANINTERVAL: 1h
+
+      # Metadata handling (important for messy folders)
+      ND_PREFERFILENAME: "true"
+      ND_PREFERMUSICBRAINZ: "true"
+      ND_ENABLEGRAVATAR: "false"
+
+      # UI / behavior
+      ND_DEFAULTLANGUAGE: en
+      ND_SESSIONTIMEOUT: 24h
+
+    volumes:
+      - ${MEDIA_PATH}/Music:/music:ro
+      - ${APPDATA_PATH}/navidrome:/data
+    networks:
+      - media-network
+
 networks:
   media-network:
     name: media-network
