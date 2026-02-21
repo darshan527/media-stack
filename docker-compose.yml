@@ -77,7 +77,8 @@ services:
 
   jellyseerr:
     image: ghcr.io/seerr-team/seerr:latest
-    container_name: jellyseerr
+    container_name: seerr
+    init: true
     environment:
       - LOG_LEVEL=debug
       - TZ=${TZ}
@@ -87,6 +88,12 @@ services:
       - ${APPDATA_PATH}/jellyseerr:/app/config
     ports:
       - "5055:5055"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/status || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
     restart: unless-stopped
     depends_on:
       - sonarr
