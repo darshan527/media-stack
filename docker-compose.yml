@@ -178,6 +178,23 @@ services:
     networks:
       - media-network
 
+  filebrowser:
+    image: gtstef/filebrowser:stable
+    container_name: filebrowser
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - FILEBROWSER_CONFIG=/data/config.yaml
+    volumes:
+      - ${APPDATA_PATH}/filebrowser:/data
+      - ${MEDIA_PATH}:/files
+    ports:
+      - "8900:80"
+    restart: unless-stopped
+    networks:
+      - media-network
+
 networks:
   media-network:
     name: media-network

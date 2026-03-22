@@ -9,6 +9,7 @@ A Docker Compose setup for managing and automating your media server needs. This
 - **Sonarr**: TV show collection manager
 - **Radarr**: Movie collection manager
 - **Jellyseerr**: Media request and discovery manager
+- **FileBrowser**: Web-based file manager for managing server directories
 - **Bazarr** (Optional): Subtitle management
 
 ## 🚀 Getting Started
@@ -45,14 +46,20 @@ A Docker Compose setup for managing and automating your media server needs. This
    docker compose up -d
    ```
 
-2. Access the services:
+2. Initialize FileBrowser (first time setup):
+   ```bash
+   ./setup-filebrowser.sh
+   ```
+
+3. Access the services:
    - qBittorrent: http://localhost:8080
    - Prowlarr: http://localhost:9696
    - Sonarr: http://localhost:8989
    - Radarr: http://localhost:7878
    - Jellyseerr: http://localhost:5055
+   - FileBrowser: http://localhost:8900
 
-3. Stop the stack:
+4. Stop the stack:
     ```bash
     docker compose down
     ```
@@ -78,6 +85,28 @@ A Docker Compose setup for managing and automating your media server needs. This
 ### Jellyseerr
 - Set up connections to Sonarr and Radarr
 - Configure user access and request limits
+
+### FileBrowser
+- Access at http://localhost:8900
+- Default credentials: `admin/admin` (change after first login)
+- Browse and manage all files in your media directories
+- Create custom user accounts for other family members
+- Features:
+  - File upload/download
+  - Directory navigation
+  - Preview files and media
+  - User-specific directory scopes
+
+#### Setup
+Run the setup script to initialize FileBrowser configuration:
+```bash
+./setup-filebrowser.sh
+```
+
+Or manually:
+```bash
+docker compose up -d filebrowser
+```
 
 ## 📝 Optional Services
 
